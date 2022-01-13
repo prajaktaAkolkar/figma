@@ -8,29 +8,34 @@ import db from '../../database/db.js';
 
 export default class FaqModel {
 
-   
+    async checkFaq(req){
+        const sql = await db.promise().query( 'SELECT * FROM `faq` WHERE `category` = ? AND `position` = ? LIMIT 1',[req.body.category , req.body.position] );
+        const data = sql[0];
+        return data;
+
+    }
+
+
      async createFaq(req){
-         console.log('faqmodel',req.body);
-         const sql = await db.promise().query('SELECT `category`,`position` FROM `faq`');
-         console.log('createFq sql query');
-         console.log(sql);
-         if(sql.position != req.body.position)
-         
-         {
          const rows = await db.promise().query('INSERT INTO `faq`(`title`,`category`,`position`,`description`,`image`,`createdAt`)VALUES(?,?,?,?,?,?)', [
                               req.body.title,
                               req.body.category,
                               req.body.position,
                               req.body.description,
                               req.body.image,
-                              new Date()
+                              new Date() 
                         ]);
-         console.log('rows', rows);
-         return Promise.resolve(req.body);
-      }
-     
-     
+          return rows[0];                   
      }
+
+     async checkUpdateFaq(req){
+        const sql = await db.promise().query( 'SELECT * FROM `faq` WHERE `category` = ? AND `position` = ? AND `id` != ?;',[req.body.category,req.body.position,req.params.id] );
+        const data = sql[0];
+        console.log('checkUpdateFaq',sql);
+        return data;
+
+    }
+  
 
      async updateFaq(req){
         const rows = await db.promise().query("UPDATE faq SET title = ?,category = ?,position = ?,description = ?,image = ?,modifiedAt= ? WHERE id = ?", [
@@ -51,6 +56,28 @@ export default class FaqModel {
         const rows = await db.promise().query("SELECT * FROM `faq`");
         console.log('rows', rows[0]);
         return Promise.resolve(rows[0]);
+    }
+
+   
+
+    async getFaqTitleSearch(req){
+        const title = req.params.title;
+        const rows = await db.promise().query(`SELECT * FROM faq WHERE title LIKE '%`+ title +`%' `);
+        console.log('rows', rows[0]);
+        return Promise.resolve(rows[0]);
+    }
+    
+    async getFaqCategoryList(req){
+        const category = req.params.category;
+        const rows = await db.promise().query("SELECT * FROM faq WHERE category = ?" , [category]);
+        console.log('rows', rows[0]);
+        return Promise.resolve(rows[0]);
+    }
+    async checkDeleteFaq(req){
+        const sql = await db.promise().query( 'SELECT * FROM `faq` WHERE `id` = ?;',[req.params.id] );
+        const data = sql[0];
+       
+        return data;
     }
 
     async deleteFaq(id){

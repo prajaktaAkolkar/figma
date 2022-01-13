@@ -13,10 +13,16 @@ export default function validate  (req, res, next)  {
     })
   
     let errResp = [];
-    Object.keys(extractedErrors).forEach(key => {
-      let obj = {};
-      obj[key] = extractedErrors[key];
-      errResp.push(obj);
+    Object.keys(extractedErrors).forEach(function(key) {
+
+     
+    // Object.keys(extractedErrors).forEach(key => {
+    //  // let obj = {};
+    //   //obj[key] = extractedErrors[key];
+    //   console.log([key] = extractedErrors[key]);
+    errResp.push([key] = key +": "+ extractedErrors[key]);
+     
+    // })
     })
     return res.status(422).json({
       errors: errResp,

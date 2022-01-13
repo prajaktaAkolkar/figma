@@ -4,6 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import faqRouter from '../src/router/faq/faq.js';
+import catRouter from '../src/router/category/category.js';
 //import stuRouter from './router/stud';
 let app = express();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 debugger;
 //app.use(stuRouter);
 app.use(faqRouter);
+app.use(catRouter)
 app.use((err,req,res,next)=>{
  err.statusCode = err.statusCode ||  500;
  err.message =err.message ||"InternalServer error";
